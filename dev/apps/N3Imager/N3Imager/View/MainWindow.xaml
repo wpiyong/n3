@@ -1,0 +1,427 @@
+﻿<Window x:Class="N3Imager.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
+        xmlns:local="clr-namespace:N3Imager.View"
+        xmlns:vm="clr-namespace:N3Imager.ViewModel"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        mc:Ignorable="d"
+        Title="N3 Imager" Height="450" Width="650" MinHeight="450" MinWidth="650">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <vm:ByteToBoolConverter x:Key="NumConverter" />
+        <vm:InverseBooleanConverter x:Key="InvBoolConverter"/>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding Path=DataContext.CommandAddMask, ElementName=Analyzer}"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <ToolBarTray DataContext="{Binding MeasurementVM}">
+                <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
+                    <Button ToolTip="Start Dark Background" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandStartDarkBG}">
+                        <Image Source="/N3Imager;component/Images/dark_background.png" Width="32"/>
+                    </Button>
+                    <Button ToolTip="Start Led" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandStartLed}">
+                        <Image Source="..\Images\led.png" Width="32"/>
+                    </Button>
+                    <Button ToolTip="N3 Fluorescence" Command="{Binding CommandStartN3Fluorescence}">
+                        <Image Source="..\Images\fluorescence.png" Width="32"/>
+                    </Button>
+                    <Button ToolTip="Deep UV Fluorescence" Command="{Binding CommandStartDeepUVFluorescence}" CommandParameter="0">
+                        <Image Source="/N3Imager;component/Images/deep_uv.png" Width="32"/>
+                    </Button>
+                    <Button ToolTip="Deep UV Fluorescence 2" Command="{Binding CommandStartDeepUVFluorescence}" CommandParameter="1">
+                        <Image Source="/N3Imager;component/Images/UV_2.png" Width="32"/>
+                    </Button>
+                    <Button ToolTip="Start Phosphorescence" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandStartPhosphorescence}">
+                        <Image Source="..\Images\phosphorescence.png" Width="32"/>
+                    </Button>
+                    <Button ToolTip="Turn off light source" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandEnd}">
+                        <Image Source="..\Images\off.png" Width="32"/>
+                    </Button>
+                    <Separator/>
+                    <Button ToolTip="Open save settings" Style="{StaticResource ToolbarButton}"
+                            Command="{Binding CommandSaveSettings}">
+                        <Image Source="..\Images\save_settings.png"/>
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+        </StackPanel>
+        
+        <TabControl Grid.Row="1" SelectedIndex="{Binding TabIndex, Mode=TwoWay}">
+            <TabItem Header="Camera">
+                <Grid DataContext="{Binding CameraVM}" IsEnabled="{Binding Ready}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <ToolBarTray>
+                            <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
+                                <Button ToolTip="Save image"  
+                                        Command="{Binding CommandSave}"  Style="{StaticResource ToolbarButton}">
+                                    <Image Source="..\Images\save.png"/>
+                                </Button>
+                            </ToolBar>
+                        </ToolBarTray>
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <local:ZoomBorder x:Name="borderImage"
+                                              Grid.Row="1" Margin="5" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" PreviewMouseRightButtonDown="borderImage_PreviewMouseRightButtonDown">
+                                <Image Source="{Binding CameraImage}" VerticalAlignment="Center">
+
+                                </Image>
+                            </local:ZoomBorder>
+                            <Label Grid.Row="0" Foreground="Gray"  FontSize="10"
+                                   HorizontalAlignment="Center">Use Mouse wheel to Zoom image.  Left click and drag to pan.  Right click to restore image.</Label>
+                        </Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                      Grid.Column="1" Padding="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.ColumnSpan="2">
+                                    <Label>Camera Settings</Label>
+                                    <Button Margin="3,5,0,15" HorizontalAlignment="Left" Width="100"
+                                            Command="{Binding CommandResetSettings}">Reset</Button>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1">
+                                    <Label x:Name="lblImageWidth">Image Width:</Label>
+                                    <Label>Image Height:</Label>
+                                    <Label>Shutter [ms]:</Label>
+                                    <Label>Gain:</Label>
+                                    <Label Visibility="Collapsed">FrameRate [ms]:</Label>
+                                    <Label Visibility="Collapsed">W.B.(Red):</Label>
+                                    <Label Visibility="Collapsed">W.B.(Blue):</Label>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="1">
+                                    <TextBox Text="{Binding ImageWidth}" IsEnabled="False" 
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                    <TextBox Text="{Binding ImageHeight}" IsEnabled="False"
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                    <TextBox Text="{Binding Shutter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="True"
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                    <TextBox Text="{Binding Gain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="True"
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                    <TextBox Visibility="Collapsed" Text="{Binding FrameRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="True"
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                    <TextBox Visibility="Collapsed" Text="{Binding WBred, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="True"
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                    <TextBox Visibility="Collapsed" Text="{Binding WBblue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="True"
+                                             Height="{Binding ElementName=lblImageWidth, Path=ActualHeight}"></TextBox>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Result" DataContext="{Binding ResultVM}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="0.55*" />
+                        <ColumnDefinition Width="0.25*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Background="AliceBlue">
+                        <StackPanel Margin="5">
+                            <!--<Label>
+                                 <TextBlock TextDecorations="Underline">Parameters</TextBlock>
+                                 </Label>-->
+                            <!--<DockPanel>
+                                 <Label>Num Pixels:</Label>
+                                 <TextBox Text="{Binding PixelSize, Mode=TwoWay}"></TextBox>
+                                 </DockPanel>-->
+
+                            <Button  Command="{Binding CommandSaveAll}" >Save Image[s]
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1" Background="White"
+                            dd:DragDrop.IsDropTarget="True"
+                            dd:DragDrop.DropHandler="{Binding}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label  Content="{Binding ImageFileName}" ToolTip="{Binding ImageFilePath}"
+                                    HorizontalAlignment="Center"></Label>
+                            <Grid Grid.Row="1" Background="Transparent"
+                                  vm:MouseBehaviour.MouseUpCommand="{Binding MouseUpCommand}"
+                                  vm:MouseBehaviour.MouseDownCommand="{Binding MouseDownCommand}"
+                                  vm:MouseBehaviour.MouseMoveCommand="{Binding MouseMoveCommand}">
+                                <Image Source="{Binding PhosImage}" VerticalAlignment="Center" >
+                                </Image>
+                                <Canvas>
+                                    <Rectangle 
+                                        Visibility="{Binding IsDragging, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}"
+                                        Stroke="DarkOrange" Fill="#77FFFFFF"
+                                        Width="{Binding RoiWidth}" Height="{Binding RoiHeight}">
+                                        <Rectangle.RenderTransform>
+                                            <TranslateTransform X="{Binding RoiX}" Y="{Binding RoiY}"/>
+                                        </Rectangle.RenderTransform>
+
+                                    </Rectangle>
+                                </Canvas>
+
+                            </Grid>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Width="50" Command="{Binding PreviousPhosImageCmd}">Previous</Button>
+                                <TextBox Width="30" Text="{Binding PhosImageListIndex, Mode=TwoWay}"></TextBox>
+                                <Button Width="50" Command="{Binding NextPhosImageCmd}">Next</Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="2" Background="Beige">
+                        <StackPanel Margin="5">
+                            <Label>
+                                <TextBlock TextDecorations="Underline">Image</TextBlock>
+                            </Label>
+                            <DockPanel>
+                                <Label>Average L:</Label>
+                                <TextBox VerticalAlignment="Center"
+                                         IsEnabled="False" BorderThickness="0"
+                                         Text="{Binding ImageL, Mode=OneWay}" ></TextBox>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label>Average S:</Label>
+                                <TextBox VerticalAlignment="Center"
+                                         IsEnabled="False" BorderThickness="0"
+                                         Text="{Binding ImageS, Mode=OneWay}" ></TextBox>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label>Average H:</Label>
+                                <TextBox VerticalAlignment="Center"
+                                         IsEnabled="False" BorderThickness="0"
+                                         Text="{Binding ImageH, Mode=OneWay}" ></TextBox>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label></Label>
+                            </DockPanel>
+                            <Label>
+                                <TextBlock TextDecorations="Underline">ROI</TextBlock>
+                            </Label>
+                            <DockPanel>
+                                <Label>Average L:</Label>
+                                <TextBox VerticalAlignment="Center"
+                                         IsEnabled="False" BorderThickness="0"
+                                         Text="{Binding SelectionL, Mode=OneWay}" ></TextBox>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label>Average S:</Label>
+                                <TextBox VerticalAlignment="Center"
+                                         IsEnabled="False" BorderThickness="0"
+                                         Text="{Binding SelectionS, Mode=OneWay}" ></TextBox>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label>Average H:</Label>
+                                <TextBox VerticalAlignment="Center"
+                                         IsEnabled="False" BorderThickness="0"
+                                         Text="{Binding SelectionH, Mode=OneWay}" ></TextBox>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Analyzer">
+                <Grid DataContext="{Binding AnalyzerVM}" Name="Analyzer">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="LightGray">
+                            
+                            <Image x:Name="iImage" Source="{Binding CurrImage}" VerticalAlignment="Center"></Image>
+                            
+                            <Viewbox Stretch="Fill" Width="{Binding ElementName=iImage, Path=ActualWidth}" Height="{Binding ElementName=iImage, Path=ActualHeight}">
+                                <Canvas Background="Transparent"  x:Name="CanvasResult" IsHitTestVisible="True" Width="{Binding Path=Width}" Height="{Binding Path=Height}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                        <ei:CallMethodAction MethodName="MouseDownHandler" TargetObject="{Binding}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseMove">
+                                        <ei:CallMethodAction MethodName="MouseMoveHandler" TargetObject="{Binding}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                        <ei:CallMethodAction MethodName="MouseUpHandler" TargetObject="{Binding}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Canvas>
+                            </Viewbox>
+                        </Grid>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                            <Button Width="70" Style="{StaticResource ToolbarButton}" Command="{Binding CommandPreviousItem}">Previous</Button>
+                            <TextBox Width="30" Margin="20,0,0,0" HorizontalAlignment="Center" VerticalAlignment="center"
+                                     Text="{Binding CurrentItem, Mode=TwoWay}">
+                            </TextBox>
+                            <Label>/</Label>
+                            <Label Width="30" Margin="0,0,20,0" Content="{Binding NumItems}"></Label>
+                            <Button Width="70" Style="{StaticResource ToolbarButton}" Command="{Binding CommandNextItem}">Next</Button>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Column="1" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Margin="5, 0">
+                            <ComboBox ToolTip="Measurement Type" Margin="0,5" ItemsSource="{Binding MeasurementTypes}" SelectedItem="{Binding MeasurementType, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 5">
+                                <Button Width="85" Style="{StaticResource ToolbarButton}" Command="{Binding CommandAddMask}" Margin="0, 0, 5, 0" Content="Add Mask"></Button>
+                                <TextBlock Width="85" Margin="5, 0, 0, 0" Text="{Binding MaskCounts}" TextAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 5">
+                                <Button Width="85" Style="{StaticResource ToolbarButton}" Command="{Binding CommandRemoveLastOne}" Margin="0, 0, 5, 0">Remove One</Button>
+                                <Button Width="85" Style="{StaticResource ToolbarButton}" Command="{Binding CommandRemoveMasks}" Margin="5, 0, 0, 0">Remove All</Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0, 5">
+                                <Button Width="85" Style="{StaticResource ToolbarButton}" Command="{Binding CommandAnalyze}" Margin="0, 0, 5, 0">Analyze</Button>
+                                <Button Width="85" Style="{StaticResource ToolbarButton}" Command="{Binding CommandSave}" Margin="5, 0, 0, 0">Save</Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <Separator Grid.Row="1" Margin="10, 5, 10, 10"/>
+                        <Grid Grid.Row="2" Margin="5, 0">
+                            <ListView Margin="0" ItemsSource="{Binding ResultList}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn x:Name="col1" Header="ID" Width="40" DisplayMemberBinding="{Binding Index}" />
+                                        <GridViewColumn Header="Description" Width="{Binding ElementName=helperField, Path=ActualWidth}" DisplayMemberBinding="{Binding Description}" />
+                                        <GridViewColumn Header="Comment" Width="{Binding ElementName=helperField2, Path=ActualWidth}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Comment}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="Black"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="Natural">
+                                                                        <Setter Property="Foreground" Value="Cyan"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="Refer">
+                                                                        <Setter Property="Foreground" Value="Magenta"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="HPHT">
+                                                                        <Setter Property="Foreground" Value="Green"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="CVD">
+                                                                        <Setter Property="Foreground" Value="LawnGreen"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="CZ">
+                                                                        <Setter Property="Foreground" Value="Salmon"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="Natural(DeepUV)">
+                                                                        <Setter Property="Foreground" Value="Yellow"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Comment}" Value="Natural(shortPHOS)">
+                                                                        <Setter Property="Foreground" Value="Red"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                                <!--<ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="2" HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Index}"/>
+                                            <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Description}"/>
+                                            </StackPanel>
+                                            
+                                            <StackPanel Grid.Column="3" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Comment}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>-->
+                            </ListView>
+                            <Grid Visibility="Hidden">
+                                <Grid.ColumnDefinitions>
+                                    <!--Width is bound to width of the first GridViewColumn -->
+                                    <ColumnDefinition Width="{Binding ElementName=col1, Path=ActualWidth}"/>
+                                    <!--Width is set to "Fill"-->
+                                    <ColumnDefinition Width="*"/>
+                                    <!--Correction Width-->
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+                                <Grid Grid.Column="1" x:Name="helperField"/>
+                                <Grid Grid.Column="2" x:Name="helperField2"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+
+        <StatusBar Grid.Row="2" DataContext="{Binding StatusVM}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ProgressBar x:Name="pgBar" IsIndeterminate="{Binding Busy, Converter={StaticResource NumConverter}}" Width="100"
+                             Visibility="{Binding ElementName=pgBar, Path=IsIndeterminate, Converter={StaticResource BoolToVis}}"/>
+                <Label Content="{Binding CurrentMessage}" 
+                       Grid.Column="1" ></Label>
+
+            </Grid>
+        </StatusBar>
+    </Grid>
+
+</Window>

@@ -1,0 +1,31 @@
+﻿<Window x:Class="N3Imager.View.SaveFolderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:N3Imager.View"
+        mc:Ignorable="d"
+        Title="Save Folder" Height="150" Width="500" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Label VerticalAlignment="Center">Name:</Label>
+            <TextBox x:Name="txtSaveFolderName" Width="435" Margin="10,5,0,5"></TextBox>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Label VerticalAlignment="Center">Path:</Label>
+            <TextBox x:Name="txtSaveFolderPath" Width="395" Margin="15,5,0,5"></TextBox>
+            <Button x:Name="btnFolderSelect" Click="btnFolderSelect_Click">
+                <Image Source="..\Images\folder_select.png"/>
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="100" Margin="5" x:Name="btnOk" Click="btnOk_Click">OK</Button>
+            <Button Width="100" Margin="5" x:Name="btnCancel" Click="btnCancel_Click">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Window>

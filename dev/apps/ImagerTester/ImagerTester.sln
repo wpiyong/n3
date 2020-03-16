@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagerTester", "ImagerTester\ImagerTester.csproj", "{C5AE337F-221B-4520-9FAC-9A33B1C50706}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLImagerLib", "..\..\libs\PLImagerLib\PLImagerLib.csproj", "{2A529290-A905-4281-AB91-E3E38A4B61EF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5AE337F-221B-4520-9FAC-9A33B1C50706}.Debug|x64.ActiveCfg = Debug|x64
+		{C5AE337F-221B-4520-9FAC-9A33B1C50706}.Debug|x64.Build.0 = Debug|x64
+		{C5AE337F-221B-4520-9FAC-9A33B1C50706}.Release|x64.ActiveCfg = Release|x64
+		{C5AE337F-221B-4520-9FAC-9A33B1C50706}.Release|x64.Build.0 = Release|x64
+		{2A529290-A905-4281-AB91-E3E38A4B61EF}.Debug|x64.ActiveCfg = Debug|x64
+		{2A529290-A905-4281-AB91-E3E38A4B61EF}.Debug|x64.Build.0 = Debug|x64
+		{2A529290-A905-4281-AB91-E3E38A4B61EF}.Release|x64.ActiveCfg = Release|x64
+		{2A529290-A905-4281-AB91-E3E38A4B61EF}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69E631BB-F146-4978-AA42-C1BC56418D6C}
+	EndGlobalSection
+EndGlobal

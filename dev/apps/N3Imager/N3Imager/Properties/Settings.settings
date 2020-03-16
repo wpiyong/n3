@@ -1,0 +1,54 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="N3Imager.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IntegrationTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="NumAverages" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ShutterDefault" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="GainDefault" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="WBRed" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1.78</Value>
+    </Setting>
+    <Setting Name="WBBlue" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">2.03</Value>
+    </Setting>
+    <Setting Name="WhiteLightMeasurementShutterTimes" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="WhiteLightMeasurementGain" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="N3FlMeasurementShutterTimes" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0.5, 2, 10, 50, 200</Value>
+    </Setting>
+    <Setting Name="N3FlMeasurementGain" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="PhosMeasurementShutterTime" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="PhosMeasurementGain" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="PhosMeasurementStartDelayUs" Type="System.Int64" Scope="Application">
+      <Value Profile="(Default)">125</Value>
+    </Setting>
+    <Setting Name="PhosMeasurementImageCount" Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="DeepUVFlMeasurementShutterTimes" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">50, 200, 500</Value>
+    </Setting>
+    <Setting Name="DeepUVFlMeasurementGain" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
